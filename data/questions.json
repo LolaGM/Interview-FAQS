@@ -559,7 +559,7 @@
     },
     {
       "id": 37,
-      "category": "Angular Standalone",
+      "category": "Angular",
       "level": "Middle",
       "question": "¿Qué es el modo Standalone en Angular y cuál es su propósito?",
       "answer": "El modo Standalone en Angular es una característica que permite compilar y ejecutar una aplicación Angular independiente de un servidor web tradicional. Su propósito es proporcionar a los desarrolladores una forma de crear aplicaciones Angular que se puedan ejecutar localmente o empaquetar como aplicaciones de escritorio sin depender de un servidor backend.",
