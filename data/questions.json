@@ -2560,7 +2560,7 @@
       ]
     },
     {
-      "id": 182,
+      "id": 180,
       "category": "Css",
       "level": "Senior",
       "question": "¿Cuándo es apropiado utilizar 'important' en CSS y cuáles son las consideraciones?",
@@ -3005,6 +3005,34 @@
         "b) Un objeto mutable es aquel que no puede ser modificado.",
         "c) Un objeto mutable solo permite cambios en sus propiedades numéricas.",
         "d) Un objeto mutable no puede contener funciones."
+      ]
+    },
+    {
+      "id": 212,
+      "category": "Javascript",
+      "level": "Middle",
+      "question": "Explica la diferencia entre 'for...in' y 'for...of' en JavaScript y proporciona un ejemplo de cada uno.",
+      "answer": "En JavaScript, 'for...in' se utiliza para iterar sobre las propiedades enumerables de un objeto, mientras que 'for...of' se utiliza para iterar sobre valores de objetos iterables como arreglos o cadenas. 'for...in' itera sobre las claves (índices en el caso de arreglos), y 'for...of' itera sobre los valores directamente.",
+      "correctAnswer": "a) 'for...in' itera sobre las propiedades enumerables de un objeto, 'for...of' itera sobre los valores de objetos iterables.",
+      "allAnswers": [
+          "a) 'for...in' itera sobre las propiedades enumerables de un objeto, 'for...of' itera sobre los valores de objetos iterables.",
+          "b) 'for...in' y 'for...of' son intercambiables y hacen lo mismo.",
+          "c) 'for...in' se utiliza solo para arreglos y 'for...of' solo para objetos.",
+          "d) 'for...in' y 'for...of' son obsoletos en el desarrollo web moderno."
+      ]
+    },   
+    {
+      "id": 213,
+      "category": "Javascript",
+      "level": "Middle",
+      "question": "¿Qué es el Event Loop en JavaScript y cómo contribuye al manejo de eventos asíncronos?",
+      "answer": "El Event Loop es un concepto fundamental en JavaScript que gestiona la ejecución de código asíncrono. Permite que JavaScript sea no bloqueante al manejar tareas como solicitudes de red, temporizadores y eventos. El Event Loop revisa continuamente la pila de ejecución y la cola de eventos, moviendo tareas asíncronas a la pila cuando esta está vacía.",
+      "correctAnswer": "a) El Event Loop en JavaScript gestiona la ejecución de código asíncrono, permitiendo que JavaScript sea no bloqueante.",
+      "allAnswers": [
+        "a) El Event Loop en JavaScript gestiona la ejecución de código asíncrono, permitiendo que JavaScript sea no bloqueante.",
+        "b) El Event Loop solo se aplica a funciones de flecha.",
+        "c) El Event Loop es obsoleto en JavaScript moderno.",
+        "d) El Event Loop se utiliza solo en el desarrollo del lado del servidor."
       ]
     },
     {
@@ -4632,7 +4660,7 @@
       ]
     },
     {
-      "id": 421,
+      "id": 420,
       "category": "Git",
       "level": "Junior",
       "question": "¿Qué es Git Pull y cuál es su propósito?",
