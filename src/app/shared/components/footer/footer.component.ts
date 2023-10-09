@@ -37,7 +37,7 @@ export class FooterComponent {
     {
       image: '../../../../assets/images/daniel-sanchez.jpg',
       contributor: 'Daniel Sánchez Pinazo',
-      link: 'https://www.linkedin.com/in/daniel-s%C3%A1nchez-pinazo-00336a231/',
+      link: 'https://www.linkedin.com/in/daniel-sanchez-pinazo/',
     },
     {
       image: '../../../../assets/images/ricardo-mera.jpg',
