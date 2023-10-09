@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { PagesService } from 'src/app/pages/services/pages.service';
 import { UsersService } from '../../../auth/services/users.service';
+import { UserService } from 'src/app/auth/services/user.service';
 
 @Component({
   selector: 'app-header',
@@ -18,6 +19,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private renderer = inject(Renderer2);
   private usersService = inject(UsersService);
   private router = inject(Router);
+  private userService = inject(UserService)
 
   public isVisible: boolean = false;
   public isUserLoggedIn: boolean = false;
@@ -35,7 +37,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
         this.closeUserMenu();
       }
     });
-    this.getUserLogged();
+    // this.getUserLogged();
   };
 
 
@@ -65,30 +67,46 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
 
+  // logout() {
+  //   this.usersService.logout();
+  //   localStorage.clear();
+  //   this.router.navigate(['/login']);
+  //   this.isUserAuthenticated = false;
+  // }
+
   logout() {
-    this.usersService.logout();
+    this.userService.logout();
     localStorage.clear();
     this.router.navigate(['/login']);
     this.isUserAuthenticated = false;
   }
 
 
-  getUserLogged() {
-    this.usersService.getAuthenticatedUserSubject()
-      .pipe(
-        takeUntil(this.unsubscribe$)
-      )
-      .subscribe((user) => {
-        if (user) {
-          this.userData = user.name;
-          this.userPhoto = user.id;
-          this.isUserAuthenticated = true;
-        } else {
-          this.userData = "";
-          this.isUserAuthenticated = false;
-        }
-      });
-  };
+  // getUserLogged() {
+  //   this.usersService.getAuthenticatedUserSubject()
+  //     .pipe(
+  //       takeUntil(this.unsubscribe$)
+  //     )
+  //     .subscribe((user) => {
+  //       if (user) {
+  //         this.userData = user.name;
+  //         this.userPhoto = user.id;
+  //         this.isUserAuthenticated = true;
+  //       } else {
+  //         this.userData = "";
+  //         this.isUserAuthenticated = false;
+  //       }
+  //     });
+  // };
+
+  
+
+  // getUserLogged() {
+  //    this.userService.isUserLogged()
+  //  }
+
+
+
 
 
   ngOnDestroy(): void {

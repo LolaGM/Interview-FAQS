@@ -5,6 +5,7 @@ import { UsersService } from '../../services/users.service';
 import { Router } from '@angular/router';
 import { PagesService } from '../../../pages/services/pages.service';
 import { Subject, takeUntil } from 'rxjs';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-login-page',
@@ -17,6 +18,7 @@ export class LoginPageComponent implements OnDestroy {
   private usersService = inject(UsersService);
   private router = inject(Router);
   private pagesService = inject(PagesService);
+  private userService = inject(UserService);
   private unsubscribe$ = new Subject<void>();
 
   public isUserRegistered: boolean = true;
@@ -45,17 +47,30 @@ export class LoginPageComponent implements OnDestroy {
   }
 
   onLogin(): void {
-    this.usersService
+    this.userService
       .login(this.myForm.value.email, this.myForm.value.password)
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((user) => {
-        if (user) {
+      .then(response => {
+        if (response) {
           this.router.navigate(['/']);
         } else {
           this.isUserRegistered = false;
         }
-      });
+      })
+      .catch(error => console.log(error));  
   }
+
+
+  onClick() {
+    this.userService.loginWithGoogle()
+      .then(response => {
+        console.log(response);
+        this.router.navigate(['/main']);
+      })
+      .catch(error => console.log(error))
+  }
+
+
+ 
 
   ngOnDestroy(): void {
     this.unsubscribe$.next();

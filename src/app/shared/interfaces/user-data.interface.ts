@@ -1,7 +1,7 @@
 export interface UserData {
   id: number;
   name: string;
-  email: string;
-  password: string;
-  favoriteQuestions: number[];
+  email: string |null;
+  password: string | null;
+  favoriteQuestions: number[] ;
 }
