@@ -5,6 +5,7 @@ import { PagesService } from '../../services/pages.service';
 import { UsersService } from 'src/app/auth/services/users.service';
 import { Subject, combineLatest} from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs';
+import { UserService } from 'src/app/auth/services/user.service';
 
 @Component({
   selector: 'app-favorites',
@@ -15,7 +16,7 @@ export class FavoritesComponent {
   
   private dataService = inject(DataService);
   private pagesService = inject(PagesService);
-  private userService = inject(UsersService);
+  private userService = inject(UserService);
 
   public questions: Question[] = [];
   public favoriteQuestions: Question[] = [];
@@ -38,8 +39,11 @@ export class FavoritesComponent {
   }
 
   checkLoginStatus() {
-    this.userService.isLoggedIn$.subscribe((loggedIn) => {
-      this.isLoggedIn = loggedIn;
+    this.userService.getAuthenticatedUserSubject().subscribe((loggedIn) => {
+      if(loggedIn){
+        this.isLoggedIn = true;
+      }
+     
     });
   }
 
@@ -119,6 +123,7 @@ export class FavoritesComponent {
     this.dataService
       .getFavoriteQuestions()
       .subscribe((favoriteQuestions: Question[]) => {
+        console.log(favoriteQuestions)
         this.favoriteQuestions = favoriteQuestions;
       });
   }

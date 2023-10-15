@@ -2,11 +2,12 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, switchMap } from 'rxjs/operators';
 import { Observable, from, of } from 'rxjs';
-import { Firestore, collection, getDocs  } from '@angular/fire/firestore';
+import { Firestore, collection, addDoc, getDocs, doc, getDoc, } from '@angular/fire/firestore';
 import { UsersService } from 'src/app/auth/services/users.service';
 import { Question } from 'src/app/shared/interfaces/answerQuestion.interface';
 import { environments } from 'src/environment/environment';
 import { UserService } from 'src/app/auth/services/user.service';
+import { updateDoc } from 'firebase/firestore';
 
 @Injectable({
   providedIn: 'root',
@@ -72,9 +73,15 @@ export class DataService {
         return null;
       }
       user.favoriteQuestions.push(questionId);
+     const userRef = doc(this.firestore, 'users');
+    const userData = { ...user }; // Convert UserData to a plain object
 
-      return this.http.put(`${this.apiUrl}/users/${user.id}`, user)
-        .subscribe(() => {});
+    return updateDoc(userRef, userData)
+      .then(() => console.log("Document successfully updated!"))
+      .catch((error) => console.error("Error updating document: ", error));
+
+      // return this.http.put(`${this.apiUrl}/users/${user.id}`, user)
+      //   .subscribe(() => {});
     });
   }
 
@@ -83,10 +90,19 @@ export class DataService {
       if (!user) {
         return null;
       }
+      
       user.favoriteQuestions = user.favoriteQuestions.filter((id) => id !== questionId);
+    
 
-      return this.http.put(`${this.apiUrl}/users/${user.id}`, user).subscribe(() => {
-      });
+      const userRef = doc(this.firestore, 'users');
+    const userData = { ...user }; // Convert UserData to a plain object
+
+    return updateDoc(userRef, userData)
+      .then(() => console.log("Document successfully updated!"))
+      .catch((error) => console.error("Error updating document: ", error));
+
+      // return this.http.put(`${this.apiUrl}/users/${user.id}`, user).subscribe(() => {
+      // });
     });
   }
 
@@ -122,7 +138,7 @@ export class DataService {
   // }
 
   getFavoriteQuestions():any {
-     this.userService.getAuthenticatedUserSubject().pipe(
+     return this.userService.getAuthenticatedUserSubject().pipe(
       switchMap((user) => {
         if (!user) {
           return of([]);
