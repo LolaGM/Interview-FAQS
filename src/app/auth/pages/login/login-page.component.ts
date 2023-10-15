@@ -46,31 +46,40 @@ export class LoginPageComponent implements OnDestroy {
     this.pagesService.setCategory(category);
   }
 
-  onLogin(): void {
-    this.userService
-      .login(this.myForm.value.email, this.myForm.value.password)
-      .then(response => {
-        if (response) {
-          this.router.navigate(['/']);
-        } else {
-          this.isUserRegistered = false;
+  async onLogin(): Promise<any> {
+    try {
+      const response = await this.userService.login(this.myForm.value.email, this.myForm.value.password);
+      if (response) {
+        this.userService.getUserLogged();
+        this.router.navigate(['/']);
+        const authData = {
+          id:response.user.uid
         }
-      })
-      .catch(error => console.log(error));  
+        console.log("esta es la respuesta de login", response);
+        localStorage.setItem('authToken',JSON.stringify(authData))
+         
+      } else {
+        this.isUserRegistered = false;
+      }
+    } catch (error) {
+      console.log(error);
+    }
   }
+
 
 
   onClick() {
     this.userService.loginWithGoogle()
       .then(response => {
         console.log(response);
-        this.router.navigate(['/main']);
+        // this.userService.isUserLogged()
+        this.router.navigate(['/']);
       })
       .catch(error => console.log(error))
   }
 
 
- 
+
 
   ngOnDestroy(): void {
     this.unsubscribe$.next();

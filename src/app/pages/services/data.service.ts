@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, switchMap } from 'rxjs/operators';
-import { Observable, of } from 'rxjs';
-
+import { Observable, from, of } from 'rxjs';
+import { Firestore, collection, getDocs  } from '@angular/fire/firestore';
 import { UsersService } from 'src/app/auth/services/users.service';
 import { Question } from 'src/app/shared/interfaces/answerQuestion.interface';
 import { environments } from 'src/environment/environment';
@@ -14,22 +14,42 @@ export class DataService {
 
   private apiUrl = environments.baseUrl;
 
-  constructor(private http: HttpClient, private usersService: UsersService) {}
+  constructor(private http: HttpClient, private usersService: UsersService, private firestore:Firestore) {}
 
-  getQuestions(category: string, level?: string): Observable<Question[]> {
-    return this.http.get<Question[]>(`${this.apiUrl}/questions`).pipe(
-      map((questions: Question[]) => {
-        if (level) {
-          return questions.filter(
-            (question) =>
-              question.category === category && question.level === level
-          );
-        } else {
-          return questions.filter((question) => question.category === category);
-        }
-      })
+  // getQuestions(category: string, level?: string): Observable<Question[]> {
+  //   return this.http.get<Question[]>(`${this.apiUrl}/questions`).pipe(
+  //     map((questions: Question[]) => {
+  //       console.log(questions)
+  //       if (level) {
+  //         return questions.filter(
+  //           (question) =>
+  //           {console.log(question)
+  //             question.category === category && question.level === level}
+  //         );
+  //       } else {
+  //         return questions.filter((question) => question.category === category);
+  //       }
+  //     })
+  //   );
+  // }
+
+  getQuestions(category: string, level?: string): Observable<any> {
+    const questionsRef = collection(this.firestore, 'questions');
+    return from(getDocs(questionsRef)).pipe(
+        map(snapshot => snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }))),
+        map(questions => {
+            if (level) {
+                return questions.filter(
+                    (question:any) =>
+                        question.category === category && question.level === level
+                );
+            } else {
+                return questions.filter((question:any) => question.category === category);
+            }
+        })
     );
-  }
+}
+
 
   getRandomQuestions(category: string, count: number): Observable<Question[]>{
     return this.getQuestions(category).pipe(

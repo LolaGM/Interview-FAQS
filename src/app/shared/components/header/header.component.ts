@@ -17,7 +17,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private pagesService = inject(PagesService);
   private el = inject(ElementRef);
   private renderer = inject(Renderer2);
-  private usersService = inject(UsersService);
   private router = inject(Router);
   private userService = inject(UserService)
 
@@ -37,7 +36,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
         this.closeUserMenu();
       }
     });
-    // this.getUserLogged();
+
+    this.getUserLogged()
   };
 
 
@@ -67,12 +67,22 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
 
-  // logout() {
-  //   this.usersService.logout();
-  //   localStorage.clear();
-  //   this.router.navigate(['/login']);
-  //   this.isUserAuthenticated = false;
-  // }
+  getUserLogged() {
+    // this.userService.isUserLogged().subscribe(resp => {
+    //   console.log("inicio de app", resp)
+    //   if (resp) {
+    //     this.userService.getUserById(resp.uid).subscribe(resp => {
+    //       this.userData = resp[0].name
+    //       this.userPhoto = resp[0].id
+    //       this.isUserAuthenticated = true;
+    //     })
+    //   } else {
+    //     this.userData = "";
+    //     this.isUserAuthenticated = false;
+    //   }
+    // })
+  }
+
 
   logout() {
     this.userService.logout();
@@ -80,33 +90,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.router.navigate(['/login']);
     this.isUserAuthenticated = false;
   }
-
-
-  // getUserLogged() {
-  //   this.usersService.getAuthenticatedUserSubject()
-  //     .pipe(
-  //       takeUntil(this.unsubscribe$)
-  //     )
-  //     .subscribe((user) => {
-  //       if (user) {
-  //         this.userData = user.name;
-  //         this.userPhoto = user.id;
-  //         this.isUserAuthenticated = true;
-  //       } else {
-  //         this.userData = "";
-  //         this.isUserAuthenticated = false;
-  //       }
-  //     });
-  // };
-
-  
-
-  // getUserLogged() {
-  //    this.userService.isUserLogged()
-  //  }
-
-
-
 
 
   ngOnDestroy(): void {

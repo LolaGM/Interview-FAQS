@@ -22,47 +22,28 @@ export class WeblinksComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject<void>();
 
 
-
-
   ngOnInit(): void {
     this.getAllLinks()
   }
 
 
-  // getAllLinks(): void {
-  //   this.weblinksService.getAllWeblinks()
-  //     .pipe(
-  //       takeUntil(this.unsubscribe$)
-  //     )
-  //     .subscribe(data => {
-  //       data.forEach(link => {
-  //         const category = link.category;
-
-  //         if (!this.categorizedLinks[category]) {
-  //           this.categorizedLinks[category] = [];
-  //         }
-
-  //         this.categorizedLinks[category].push(link);
-  //       });
-  //     });
-  // }
-
-
-
   getAllLinks(): void {
     this.weblinksService.getAllWeblinks()
-      
-      .subscribe(data => {
-        console.log(data)
-        // data.forEach(link => {
-        //   const category = link.category;
+      .pipe(
+        takeUntil(this.unsubscribe$)
+      )
+      .subscribe((data: any[]) => {
 
-        //   if (!this.categorizedLinks[category]) {
-        //     this.categorizedLinks[category] = [];
-        //   }
+        data.forEach(link => {
+          const category = link.category;
 
-        //   this.categorizedLinks[category].push(link);
-        // });
+          if (!this.categorizedLinks[category]) {
+            this.categorizedLinks[category] = [];
+          }
+
+          this.categorizedLinks[category].push(link);
+
+        });
       });
   }
 
@@ -78,6 +59,5 @@ export class WeblinksComponent implements OnInit, OnDestroy {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
   }
-
 
 }

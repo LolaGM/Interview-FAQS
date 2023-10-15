@@ -98,11 +98,13 @@ export class RegisterComponent implements OnInit, OnDestroy {
                 id: resp.user.uid,
                 name: this.currentUser.name,
                 email: resp.user.email,
-                password: null
+                password: null,
+                favoriteQuestions:[]
             };
             console.log(user);
             await this.userService.addUser(user);
             console.log("usuario creado");
+            this.router.navigate(['/']);
         }
     } catch (error) {
         console.log(error);

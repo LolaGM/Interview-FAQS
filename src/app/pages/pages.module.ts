@@ -20,9 +20,7 @@ import { TypescriptQuestionsComponentComponent } from './components/typescript-q
 import { UserDataComponent } from './components/user-data/user-data.component';
 import { WeblinksComponent } from './weblinks-page/weblinks-page.component';
 import { QuizComponent } from './quiz/quiz.component';
-import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
-import { getFirestore, provideFirestore } from '@angular/fire/firestore';
-import { environment } from 'src/environments/environment';
+
 import { NgModule } from '@angular/core';
 
 
@@ -52,8 +50,7 @@ import { NgModule } from '@angular/core';
     SharedModule,
     ReactiveFormsModule,
     FormsModule,
-    provideFirebaseApp(() => initializeApp(environment.firebase)),
-    provideFirestore(() => getFirestore()),
+    
   ],
   exports: [
     HomePageComponent,
