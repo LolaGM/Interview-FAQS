@@ -6,6 +6,7 @@ import { UserData } from 'src/app/shared/interfaces/user-data.interface';
 
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { UserService } from 'src/app/auth/services/user.service';
 
 @Component({
   selector: 'app-user-data',
@@ -15,6 +16,7 @@ import { takeUntil } from 'rxjs/operators';
 export class UserDataComponent implements OnInit, OnDestroy {
 
   private usersService = inject(UsersService);
+  private userService = inject(UserService);
   private router = inject(Router);
 
   public userData: UserData | null = null;
@@ -30,7 +32,7 @@ export class UserDataComponent implements OnInit, OnDestroy {
 
 
   getUserLogged() {
-    this.usersService.getAuthenticatedUserSubject()
+    this.userService.getAuthenticatedUserSubject()
       .pipe(
         takeUntil(this.unsubscribe$)
       )

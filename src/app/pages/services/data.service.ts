@@ -6,6 +6,7 @@ import { Firestore, collection, getDocs  } from '@angular/fire/firestore';
 import { UsersService } from 'src/app/auth/services/users.service';
 import { Question } from 'src/app/shared/interfaces/answerQuestion.interface';
 import { environments } from 'src/environment/environment';
+import { UserService } from 'src/app/auth/services/user.service';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +15,7 @@ export class DataService {
 
   private apiUrl = environments.baseUrl;
 
-  constructor(private http: HttpClient, private usersService: UsersService, private firestore:Firestore) {}
+  constructor(private http: HttpClient, private usersService: UsersService, private firestore:Firestore, private userService:UserService) {}
 
   // getQuestions(category: string, level?: string): Observable<Question[]> {
   //   return this.http.get<Question[]>(`${this.apiUrl}/questions`).pipe(
@@ -66,7 +67,7 @@ export class DataService {
 
 
   markQuestionAsFavorite(questionId: number) {
-    this.usersService.getAuthenticatedUserSubject().subscribe((user) => {
+    this.userService.getAuthenticatedUserSubject().subscribe((user) => {
       if (!user) {
         return null;
       }
@@ -78,7 +79,7 @@ export class DataService {
   }
 
   unmarkQuestionAsFavorite(questionId: number) {
-    this.usersService.getAuthenticatedUserSubject().subscribe((user) => {
+    this.userService.getAuthenticatedUserSubject().subscribe((user) => {
       if (!user) {
         return null;
       }
@@ -91,21 +92,51 @@ export class DataService {
 
 
 
-  getFavoriteQuestions(): Observable<Question[]> {
-    return this.usersService.getAuthenticatedUserSubject().pipe(
+  // getFavoriteQuestions(): Observable<Question[]> {
+  //   return this.userService.getAuthenticatedUserSubject().pipe(
+  //     switchMap((user) => {
+  //       if (!user) {
+  //         return of([]);
+  //       }
+
+  //       // return this.http.get<Question[]>(`${this.apiUrl}/questions`).pipe(
+  //       //   map((questions) =>
+  //       //     questions.filter((question) => user.favoriteQuestions.includes(question.id))
+  //       //   )
+  //       // );
+
+
+
+  //       const questionsRef = collection(this.firestore, 'questions');
+  //       from(getDocs(questionsRef)).pipe(
+  //           map(snapshot => snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }))),
+  //           map(questions => {
+  //             questions.filter((question) => user.favoriteQuestions.includes(question.id))
+  //           })
+  //       );
+
+
+
+  //     })
+  //   );
+  // }
+
+  getFavoriteQuestions():any {
+     this.userService.getAuthenticatedUserSubject().pipe(
       switchMap((user) => {
         if (!user) {
           return of([]);
         }
-
-        return this.http.get<Question[]>(`${this.apiUrl}/questions`).pipe(
-          map((questions) =>
-            questions.filter((question) => user.favoriteQuestions.includes(question.id))
-          )
+  
+        const questionsRef = collection(this.firestore, 'questions');
+        return from(getDocs(questionsRef)).pipe(
+          map(snapshot => snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }))),
+          map(questions => questions.filter((question) => user.favoriteQuestions.includes(parseInt(question.id))))
         );
       })
     );
   }
 
+ 
 
 }
