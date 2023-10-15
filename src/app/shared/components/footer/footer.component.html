@@ -1,54 +1,60 @@
-<div class="footer-container__contributors-container">
-  <ul class="footer-container__contributors-list">
-    <li
-      class="footer-container__contributors-list-item"
-      *ngFor="let x of selectedArray"
-    >
-      <img [src]="x.image" alt="" class="footer-container__profile-image" />
-      <p class="footer-container__link-title">{{ x.contributor }}</p>
-      <a [href]="x.link" target="_blank">
-        <img
-          src="../../../../assets/images/linkedin-icon.png"
-          class="footer-container__link-image"
-          alt=" "
-        />
-      </a>
-    </li>
-  </ul>
-</div>
 
-  <ng-template #content let-modal>
-    <div class="modal-header">
-      <h4 class="modal-title">¿Qué es esto?</h4>
+<ng-template #rrss let-modal>
+	<div class="modal-header">
+		<h4 class="modal-title">Desarrolladores</h4>
+	</div>
+	<div class="modal-body-contributors">
+		<div class="footer-container__contributors">
+      <ul class="footer-container__contributors-list">
+        <li class="footer-container__contributors-list-item" *ngFor="let x of contributors">
+          <img [src]="x.image" [alt]="x.contributor" class="footer-container__profile-image" />
+          <p class="footer-container__link-title">{{ x.contributor }}</p>
+          <a [href]="x.link" target="_blank">
+            <img src="../../../../assets/images/linkedin-icon.png" class="footer-container__link-image" alt="Linkedin" />
+          </a>
+        </li>
+      </ul>
     </div>
-    <div class="modal-body">
-      <p>Este proyecto nace de la pasión por compartir el aprendizaje de Angular adquirido durante las prácticas como frontend developer en la empresa Bosonit.</p>
-      <p>Nuestro objetivo principal es consolidar nuestros conocimientos y ayudar a otros juniors como nosotros a prepararse para la parte teórica de las entrevistas en procesos de selección.</p>
-    </div>
-    <div class="modal-footer">
-      <button id="whatClose" type="button" class="btn" (click)="modal.close('Close click')">Cerrar</button>
-    </div>
-  </ng-template>
+	</div>
+	<div class="modal-footer">
+		<button type="button" class="btn whatClose" (click)="modal.close('Close click')">Cerrar</button>
+	</div>
+</ng-template>
 
+<ng-template #what let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">¿Qué es esto?</h4>
+  </div>
+  <div class="modal-body">
+    <p>Este proyecto nace de la pasión por compartir el aprendizaje de Angular adquirido durante las prácticas como
+      frontend developer en la empresa Bosonit.</p>
+    <p>Nuestro objetivo principal es consolidar nuestros conocimientos y ayudar a otros juniors como nosotros a
+      prepararse para la parte teórica de las entrevistas en procesos de selección.</p>
+  </div>
+  <div class="modal-footer">
+    <button class="btn whatClose" type="button" (click)="modal.close('Close click')">Cerrar</button>
+  </div>
+</ng-template>
 
 <footer>
   <div class="footer-container ">
     <div class="footer-container__name">
-      <p class="footer-container__name-button">Interview</p>
-      <p class="footer-container__name-button">FAQS</p>
+      <a [routerLink]="['/home-page']" class="footer-container__name-button">
+        <p class="footer-container__name-button">Interview</p>
+        <p class="footer-container__name-button">FAQS</p>
+      </a>
     </div>
     <div class="footer-container__info">
-      <button id="whatIsThat" class="btn" (click)="openVerticallyCentered(content)">
+      <button id="whatIsThat" class="btn" (click)="openVerticallyCentered(what)">
         ¿Qué es esto?
       </button>
     </div>
-    <div class="footer-container__contact">
-      <p
-        class="footer-container__contact-button"
-        (click)="showContributorsList()"
-      >
-        {{ isContributorListShown ? "Cerrar" : "RRSS" }}
-      </p>
+
+    <div class="footer-container__rrss">
+      <button id="rrss" class="btn" (click)="openVerticallyCentered(rrss)">
+        RRSS
+      </button>
     </div>
+
   </div>
 </footer>
