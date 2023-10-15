@@ -22,26 +22,9 @@ export class AppComponent implements OnInit, OnDestroy {
   private user?: null |string = null
 
   ngOnInit(): void {
-    // this.checkUserLogin();
      this.getUserLogged()
-  
   };
 
-
-  checkUserLogin() {
-    const authDataString = localStorage.getItem('authToken');
-    if (authDataString) {
-      const authData = JSON.parse(authDataString);
-      const userId = authData.userId;
-      this.userService.getUserById(userId)
-        .pipe(
-          takeUntil(this.unsubscribe$)
-        )
-        .subscribe((user: any) => {
-          this.userService.setAuthenticatedUserSubject(user);
-        });
-    };
-  };
 
 
   toggleBlurEffect(blur: boolean) {
@@ -52,17 +35,15 @@ export class AppComponent implements OnInit, OnDestroy {
   getUserLogged() {
     const authDataString = localStorage.getItem('authToken');
     if(authDataString){
-      this.userServices.getUserLogged()
-      // this.userServices.isUserLogged().subscribe(resp => {
-      //   console.log("inicio de app",resp)
-        
-      // })
+      this.userServices.getUserById(authDataString).subscribe(user=>{
+        console.log(user)
+        const userData = user[0]
+        console.log(userData)
+        this.userServices.setAuthenticatedUserSubject(userData)
+      })
     }
-     
   }
 
-
-  
 
   ngOnDestroy(): void {
     this.unsubscribe$.next();

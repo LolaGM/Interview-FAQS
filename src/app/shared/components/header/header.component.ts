@@ -68,19 +68,18 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
 
   getUserLogged() {
-    // this.userService.isUserLogged().subscribe(resp => {
-    //   console.log("inicio de app", resp)
-    //   if (resp) {
-    //     this.userService.getUserById(resp.uid).subscribe(resp => {
-    //       this.userData = resp[0].name
-    //       this.userPhoto = resp[0].id
-    //       this.isUserAuthenticated = true;
-    //     })
-    //   } else {
-    //     this.userData = "";
-    //     this.isUserAuthenticated = false;
-    //   }
-    // })
+    this.userService.getAuthenticatedUserSubject().subscribe(resp => {
+      if (resp) {
+       console.log(resp)
+          this.userData = resp.name
+          this.userPhoto = resp.id
+          this.isUserAuthenticated = true;
+        
+      } else {
+        this.userData = "";
+        this.isUserAuthenticated = false;
+      }
+    })
   }
 
 

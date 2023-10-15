@@ -34,30 +34,38 @@ export class LoginPageComponent implements OnDestroy {
     ],
   });
 
+
+
   get isEmailValid(): boolean {
     return this.myForm.get('email')?.valid as boolean;
   }
+
 
   isFieldValid(field: string): boolean | null {
     return this.validatorsService.isValidField(this.myForm, field);
   }
 
+
   chooseCategory(category: string): void {
     this.pagesService.setCategory(category);
   }
+
 
   async onLogin(): Promise<any> {
     try {
       const response = await this.userService.login(this.myForm.value.email, this.myForm.value.password);
       if (response) {
-        this.userService.getUserLogged();
-        this.router.navigate(['/']);
+       
+        this.userService.getUserById(response.user.uid).subscribe(user => {
+          const userData = user[0]
+          this.userService.setAuthenticatedUserSubject(userData)
+          this.router.navigate(['/']);
         const authData = {
           id:response.user.uid
         }
-        console.log("esta es la respuesta de login", response);
         localStorage.setItem('authToken',JSON.stringify(authData))
-         
+        })
+             
       } else {
         this.isUserRegistered = false;
       }
@@ -65,7 +73,6 @@ export class LoginPageComponent implements OnDestroy {
       console.log(error);
     }
   }
-
 
 
   onClick() {
@@ -77,8 +84,6 @@ export class LoginPageComponent implements OnDestroy {
       })
       .catch(error => console.log(error))
   }
-
-
 
 
   ngOnDestroy(): void {
