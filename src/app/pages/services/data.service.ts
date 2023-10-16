@@ -2,12 +2,12 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, switchMap } from 'rxjs/operators';
 import { Observable, from, of } from 'rxjs';
-import { Firestore, collection, addDoc, getDocs, doc, getDoc, } from '@angular/fire/firestore';
+import { Firestore, collection, addDoc, getDocs, doc, getDoc,updateDoc, collectionData, query, where } from '@angular/fire/firestore';
 import { UsersService } from 'src/app/auth/services/users.service';
 import { Question } from 'src/app/shared/interfaces/answerQuestion.interface';
 import { environments } from 'src/environment/environment';
 import { UserService } from 'src/app/auth/services/user.service';
-import { updateDoc } from 'firebase/firestore';
+
 
 @Injectable({
   providedIn: 'root',
@@ -66,45 +66,105 @@ export class DataService {
     )
   }
 
+  
 
-  markQuestionAsFavorite(questionId: number) {
-    this.userService.getAuthenticatedUserSubject().subscribe((user) => {
-      if (!user) {
-        return null;
-      }
-      user.favoriteQuestions.push(questionId);
-     const userRef = doc(this.firestore, 'users');
-    const userData = { ...user }; // Convert UserData to a plain object
 
-    return updateDoc(userRef, userData)
-      .then(() => console.log("Document successfully updated!"))
-      .catch((error) => console.error("Error updating document: ", error));
-
-      // return this.http.put(`${this.apiUrl}/users/${user.id}`, user)
-      //   .subscribe(() => {});
-    });
-  }
-
-  unmarkQuestionAsFavorite(questionId: number) {
-    this.userService.getAuthenticatedUserSubject().subscribe((user) => {
-      if (!user) {
-        return null;
-      }
+ 
+     
       
-      user.favoriteQuestions = user.favoriteQuestions.filter((id) => id !== questionId);
-    
-
-      const userRef = doc(this.firestore, 'users');
-    const userData = { ...user }; // Convert UserData to a plain object
-
-    return updateDoc(userRef, userData)
-      .then(() => console.log("Document successfully updated!"))
-      .catch((error) => console.error("Error updating document: ", error));
-
-      // return this.http.put(`${this.apiUrl}/users/${user.id}`, user).subscribe(() => {
-      // });
-    });
+      markQuestionAsFavorite(questionId: number) {
+        this.userService.getAuthenticatedUserSubject().subscribe(async (user) => {
+          if (!user) {
+            return null;
+          }
+          
+          // Crea una consulta para buscar el documento del usuario
+          const userCollection = collection(this.firestore, 'users');
+          const q = query(userCollection, where('id', '==', user.id));
+          
+          // Ejecuta la consulta y obtén los documentos
+          const querySnapshot = await getDocs(q);
+          
+          // Verifica si se encontró el documento del usuario
+          if (querySnapshot.empty) {
+            console.error("No se encontró el documento del usuario");
+            return false;
+          }
+          
+          // Obtiene el primer documento de los resultados de la consulta
+          const userDoc = querySnapshot.docs[0];
+          
+          // Obtiene el ID del documento
+          const docId = userDoc.id;
+          
+          // Añade questionId a favoriteQuestions
+          user.favoriteQuestions.push(questionId);
+          
+          // Obtiene una referencia al documento del usuario utilizando el ID del documento
+          const userRef = doc(this.firestore, 'users', docId);
+          
+          // Prepara los datos del usuario para la actualización
+          const userData = { favoriteQuestions: user.favoriteQuestions };
+      
+          try {
+            // Actualiza el documento en Firestore
+            await updateDoc(userRef, userData);
+            console.log("Document successfully updated!");
+            return true;
+          } catch (error) {
+            console.error("Error updating document: ", error);
+            return false;
+          }
+        });
   }
+
+  
+
+unmarkQuestionAsFavorite(questionId: number) {
+  this.userService.getAuthenticatedUserSubject().subscribe(async (user) => {
+    if (!user) {
+      return null;
+    }
+    
+    // Elimina questionId de favoriteQuestions
+    user.favoriteQuestions = user.favoriteQuestions.filter(id => id !== questionId);
+    
+    // Crea una consulta para buscar el documento del usuario
+    const userCollection = collection(this.firestore, 'users');
+    const q = query(userCollection, where('id', '==', user.id));
+    
+    // Ejecuta la consulta y obtén los documentos
+    const querySnapshot = await getDocs(q);
+    
+    // Verifica si se encontró el documento del usuario
+    if (querySnapshot.empty) {
+      console.error("No se encontró el documento del usuario");
+      return false;
+    }
+    
+    // Obtiene el primer documento de los resultados de la consulta
+    const userDoc = querySnapshot.docs[0];
+    
+    // Obtiene el ID del documento
+    const docId = userDoc.id;
+    
+    // Obtiene una referencia al documento del usuario utilizando el ID del documento
+    const userRef = doc(this.firestore, 'users', docId);
+    
+    // Prepara los datos del usuario para la actualización
+    const userData = { favoriteQuestions: user.favoriteQuestions };
+
+    try {
+      // Actualiza el documento en Firestore
+      await updateDoc(userRef, userData);
+      console.log("Document successfully updated!");
+      return true;
+    } catch (error) {
+      console.error("Error updating document: ", error);
+      return false;
+    }
+  });
+}
 
 
 
@@ -120,19 +180,6 @@ export class DataService {
   //       //     questions.filter((question) => user.favoriteQuestions.includes(question.id))
   //       //   )
   //       // );
-
-
-
-  //       const questionsRef = collection(this.firestore, 'questions');
-  //       from(getDocs(questionsRef)).pipe(
-  //           map(snapshot => snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }))),
-  //           map(questions => {
-  //             questions.filter((question) => user.favoriteQuestions.includes(question.id))
-  //           })
-  //       );
-
-
-
   //     })
   //   );
   // }

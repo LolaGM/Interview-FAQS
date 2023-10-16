@@ -36,6 +36,7 @@ export class FavoritesComponent {
     this.loadCategory();
     this.loadFavoriteQuestions();
     this.checkLoginStatus();
+    this.userService.getIdDocument().subscribe(val => console.log(val))
   }
 
   checkLoginStatus() {

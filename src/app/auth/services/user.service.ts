@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, signInWithPopup, GoogleAuthProvider, User } from '@angular/fire/auth';
-import { Firestore, collection, addDoc, getDocs, doc, getDoc, } from '@angular/fire/firestore';
+import { Firestore, collection, addDoc, getDocs, doc, getDoc, collectionData, } from '@angular/fire/firestore';
 
 import { Observable, BehaviorSubject, from, map } from 'rxjs';
 import { UserData } from 'src/app/shared/interfaces/user-data.interface';
@@ -55,6 +55,13 @@ export class UserService {
     return addDoc(usersRef, user);
   }
 
+  getIdDocument() {
+    const collectionInstance = collection(this.firestore, 'users');
+    collectionData(collectionInstance, {idField:'id'})
+    
+    return collectionData(collectionInstance, {idField:'id'})
+  }
+
 
   getUserLogged() {
     this.auth.onAuthStateChanged(user => {
@@ -84,4 +91,6 @@ export class UserService {
   );
   }
 
+
+  
 }
