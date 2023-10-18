@@ -7,16 +7,13 @@
   color: #fcfcfc;
 }
 
-
 .login-title {
   text-align: center;
 }
 
-
 .register-link-question {
   color: #fcfcfc;
 }
-
 
 .loginForm {
   display: flex;
@@ -40,7 +37,39 @@
   }
 }
 
+.login-buttons-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  @media(min-width: 768px){
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+.login-submit-button-send-container{
+  display: flex;
+  @media(min-width: 768px){
+    justify-content: flex-start;
+    flex-direction: row;
+    align-items: center;
+  }
+}
 
+.login-submit-button-google-container{
+  display: flex;
+  justify-content: flex-start;
+  @media(min-width: 768px){
+    justify-content: end;
+    flex-direction: row;
+    align-items: center;
+  }
+}
+.googleLogo {
+  width: 20px;
+  margin-left: 7px;
+}
 .login-submit-button {
   border: 1px solid #778899;
   box-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
@@ -48,34 +77,36 @@
   color: #0f213b;
   font-weight: bold;
   padding: 5px 15px;
+  display: flex;
+  align-items: center;
 
-  @media(min-width: 768px) {
+  @media (min-width: 768px) {
     padding: 10px 30px;
   }
 }
 
-#notRegisteredModal{
+#notRegisteredModal {
   margin-top: 100px;
   padding: 10px;
   font-weight: 500;
-  color:#0f213b;
-  color: #FCFCFC;
+  color: #0f213b;
+  color: #fcfcfc;
 }
-.modal{
+.modal {
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
 }
 
-.modal-button{
+.modal-button {
   background-color: #e1effb;
-  color:#0f213b;
+  color: #0f213b;
   font-weight: bold;
 }
-.modal-content{
+.modal-content {
   background-color: #0f213b;
 }
-.modal-footer{
+.modal-footer {
   padding: 8px;
 }
