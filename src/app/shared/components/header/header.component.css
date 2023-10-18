@@ -191,7 +191,7 @@
 .header-container__navbar-items-logo-img-full {
   display: none;
   @media (min-width: 768px) {
-    margin: 0 0 0 55px;
+    margin: 0 0 0 70px;
     display: block;
     width: 400px;
     height: auto;
@@ -272,7 +272,7 @@
     width: 35px;
     height: 35px;
   }
-  
+
 }
 
 /*USER MENU ICON*/

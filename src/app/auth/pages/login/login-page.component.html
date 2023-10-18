@@ -1,11 +1,9 @@
 <div class="login-container general-container">
-  <div [formGroup]="myForm"
-  (ngSubmit)="onLogin()"
-            >
+  <div [formGroup]="myForm" (ngSubmit)="onLogin()">
     <h2 class="login-title">Iniciar sesión</h2>
 
     <form class="loginForm m-4" autocomplete="off">
-      <div *ngIf="!isUserRegistered" >
+      <div *ngIf="!isUserRegistered">
         <div class="not-registered-message text-center text-danger">
           <h5>Usuario no registrado.</h5>
         </div>
@@ -43,7 +41,7 @@
           </span>
         </div>
       </div>
-      <div class="d-flex justify-content-center my-4">
+      <div class="d-flex justify-content-center my-3">
         <a
           class="register-link-question"
           [routerLink]="['/register']"
@@ -54,20 +52,24 @@
         </a>
       </div>
 
-      <div class="row">
-        <div class="col login-submit-button-container">
-          <button
-            class="btn login-submit-button mt-2"
-            type="submit"
-
-          >
+      <div class="row login-buttons-container">
+        <div class="col login-submit-button-send-container">
+          <button class="btn login-submit-button mt-3" type="submit">
             Enviar
           </button>
-
-          <button (click)="onClick()">Entrar con Google </button>
         </div>
+        <div class="col login-submit-button-google-container">
+          <button
+            class="btn login-submit-button mt-3"
+            type="submit"
+            (click)="onClick()"
+          >
+          Entrar con
+            <img class="googleLogo" src="../../../../assets/images/logo-google.png" alt="logo-google">
+          </button>
+        </div>
+
       </div>
     </form>
   </div>
-
 </div>

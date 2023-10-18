@@ -48,6 +48,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   onClickUser() {
     this.isUserLoggedIn = !this.isUserLoggedIn;
+
   }
 
 
@@ -68,24 +69,22 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
 
   getUserLogged() {
-    console.log("entra al getUserlogged")
     this.userService.getAuthenticatedUserSubject()
     .pipe(
       takeUntil(this.unsubscribe$)
     )
     .subscribe(resp => {
       if (resp) {
-        console.log(resp)
         this.userData = resp.name
-        
+
         if (typeof resp.photoUrl === 'string' && resp.photoUrl.includes('https')) {
           this.userPhoto = resp.photoUrl;
-       
+
         } else if (typeof resp.photoUrl === 'number') {
           this.userPhoto = `https://robohash.org/${resp.photoUrl}?set=set1&size=180x180`;
-          
+
         }
-        
+
         this.userService.setAuthenticatedUserProfileSubject(this.userPhoto)
         this.isUserAuthenticated = true;
       } else {
