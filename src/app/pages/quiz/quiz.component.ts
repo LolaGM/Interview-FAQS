@@ -1,15 +1,17 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { DataService } from '../services/data.service';
 import { QuestionWithAnswer } from 'src/app/shared/interfaces/answerQuestion.interface';
 import { PagesService } from '../services/pages.service';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-quiz',
   templateUrl: './quiz.component.html',
   styleUrls: ['./quiz.component.css']
 })
-export class QuizComponent implements OnInit{
+export class QuizComponent implements OnInit, OnDestroy {
+
 
   public questions: QuestionWithAnswer[] = [];
   public selectedAnswer: string | null = null;
@@ -20,19 +22,25 @@ export class QuizComponent implements OnInit{
   private dataService = inject(DataService);
   private pagesService = inject(PagesService);
 
+  private unsubscribe$ = new Subject<void>();
+
   ngOnInit(): void {
     this.loadCategoryRandomQuestions();
   }
 
   loadCategoryRandomQuestions() {
-    this.pagesService.selectedCategory$.subscribe((selectedCategory) => {
-      this.getRandomQuestions(selectedCategory)
-    })
+    this.pagesService.selectedCategory$
+      .pipe(
+        takeUntil(this.unsubscribe$)
+      )
+      .subscribe((selectedCategory) => {
+        this.getRandomQuestions(selectedCategory)
+      })
   }
 
-  getRandomQuestions(selectedCategory: string){
+  getRandomQuestions(selectedCategory: string) {
     this.dataService.getRandomQuestions(selectedCategory, 10).subscribe((questions) => {
-      this.questions = questions.map((question) => ({...question, selectedAnswer: null}));
+      this.questions = questions.map((question) => ({ ...question, selectedAnswer: null }));
     });
   }
 
@@ -59,9 +67,15 @@ export class QuizComponent implements OnInit{
     return correctAnswers;
   }
 
-  onSubmit(){
+  onSubmit() {
     this.isSubmitted = true;
     this.result = this.calculateResult();
+  }
+
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
 }

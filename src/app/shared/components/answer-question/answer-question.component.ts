@@ -5,6 +5,7 @@ import { Subject, combineLatest, of, switchMap, takeUntil } from 'rxjs';
 import { DataService } from 'src/app/pages/services/data.service';
 import { UsersService } from 'src/app/auth/services/users.service';
 import { Router } from '@angular/router';
+import { UserService } from 'src/app/auth/services/user.service';
 
 
 @Component({
@@ -16,6 +17,7 @@ export class AnswerQuestionComponent {
   private pagesService = inject(PagesService);
   private dataService = inject(DataService);
   private userService = inject(UsersService);
+  private userServices = inject(UserService);
   private router = inject(Router);
 
   public questions: Question[] = [];
@@ -41,8 +43,13 @@ export class AnswerQuestionComponent {
   }
 
   checkLoginStatus(){
-    this.userService.isLoggedIn$.subscribe((loggedIn) => {
-      this.isLoggedIn = loggedIn;
+    this.userServices.getAuthenticatedUserSubject().subscribe((loggedIn) => {
+      if(loggedIn){
+        this.isLoggedIn =true;
+      }else {
+        this.isLoggedIn = false;
+      }
+      
     })
   }
 

@@ -7,6 +7,12 @@ import { RouterModule } from '@angular/router';
 import { LoginPageComponent } from './pages/login/login-page.component';
 import { RegisterComponent } from './pages/register/register.component';
 
+import { initializeApp,provideFirebaseApp } from '@angular/fire/app';
+
+import { provideAuth,getAuth } from '@angular/fire/auth';
+import { provideFirestore,getFirestore } from '@angular/fire/firestore';
+import { environment } from 'src/environments/environment';
+
 
 @NgModule({
   declarations: [
@@ -18,6 +24,7 @@ import { RegisterComponent } from './pages/register/register.component';
     HttpClientModule,
     ReactiveFormsModule,
     RouterModule,
+    
   ],
   providers: [],
 })

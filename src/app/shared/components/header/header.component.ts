@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { PagesService } from 'src/app/pages/services/pages.service';
 import { UsersService } from '../../../auth/services/users.service';
+import { UserService } from 'src/app/auth/services/user.service';
 
 @Component({
   selector: 'app-header',
@@ -16,14 +17,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private pagesService = inject(PagesService);
   private el = inject(ElementRef);
   private renderer = inject(Renderer2);
-  private usersService = inject(UsersService);
   private router = inject(Router);
+  private userService = inject(UserService)
 
   public isVisible: boolean = false;
   public isUserLoggedIn: boolean = false;
   public isUserAuthenticated: boolean = false;
   public userData!: string;
-  public userPhoto!: number;
+  public userPhoto? = "https://robohash.org/set=set1&size=180x180"
 
   private unsubscribe$ = new Subject<void>();
 
@@ -35,7 +36,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
         this.closeUserMenu();
       }
     });
-    this.getUserLogged();
+
+    this.getUserLogged()
   };
 
 
@@ -65,30 +67,42 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
 
-  logout() {
-    this.usersService.logout();
-    localStorage.clear();
-    this.router.navigate(['/login']);
-    this.isUserAuthenticated = false;
+  getUserLogged() {
+    console.log("entra al getUserlogged")
+    this.userService.getAuthenticatedUserSubject()
+    .pipe(
+      takeUntil(this.unsubscribe$)
+    )
+    .subscribe(resp => {
+      if (resp) {
+        console.log(resp)
+        this.userData = resp.name
+        
+        if (typeof resp.photoUrl === 'string' && resp.photoUrl.includes('https')) {
+          this.userPhoto = resp.photoUrl;
+       
+        } else if (typeof resp.photoUrl === 'number') {
+          this.userPhoto = `https://robohash.org/${resp.photoUrl}?set=set1&size=180x180`;
+          
+        }
+        
+        this.userService.setAuthenticatedUserProfileSubject(this.userPhoto)
+        this.isUserAuthenticated = true;
+      } else {
+        this.userData = "";
+        this.isUserAuthenticated = false;
+      }
+    })
   }
 
 
-  getUserLogged() {
-    this.usersService.getAuthenticatedUserSubject()
-      .pipe(
-        takeUntil(this.unsubscribe$)
-      )
-      .subscribe((user) => {
-        if (user) {
-          this.userData = user.name;
-          this.userPhoto = user.id;
-          this.isUserAuthenticated = true;
-        } else {
-          this.userData = "";
-          this.isUserAuthenticated = false;
-        }
-      });
-  };
+  logout() {
+    this.userService.logout();
+    localStorage.clear();
+    this.router.navigate(['/login']);
+    this.userPhoto = "https://robohash.org/set=set1&size=180x180"
+    this.isUserAuthenticated = false;
+  }
 
 
   ngOnDestroy(): void {

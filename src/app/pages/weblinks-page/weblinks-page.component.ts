@@ -32,7 +32,8 @@ export class WeblinksComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.unsubscribe$)
       )
-      .subscribe(data => {
+      .subscribe((data: any[]) => {
+
         data.forEach(link => {
           const category = link.category;
 
@@ -41,6 +42,7 @@ export class WeblinksComponent implements OnInit, OnDestroy {
           }
 
           this.categorizedLinks[category].push(link);
+
         });
       });
   }
@@ -57,6 +59,5 @@ export class WeblinksComponent implements OnInit, OnDestroy {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
   }
-
 
 }

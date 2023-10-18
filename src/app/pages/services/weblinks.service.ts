@@ -1,20 +1,24 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Observable } from 'rxjs';
-import { Weblinks } from 'src/app/shared/interfaces/weblinks.interface';
-import { environments } from 'src/environment/environment';
+import { Firestore, collection, getDocs } from '@angular/fire/firestore';
+import { Observable,  from, map } from 'rxjs';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class WeblinksService {
 
-  private http = inject(HttpClient);
-  private apiUrl = environments.baseUrl;
+  private firestore = inject(Firestore);
 
-
-
-  getAllWeblinks():Observable<Weblinks[]>{
-    return this.http.get<Weblinks[]>(`${this.apiUrl}/weblinks`)
+  
+  getAllWeblinks(): Observable<any> {
+    const weblinksRef = collection(this.firestore, 'weblinks');
+    return from(getDocs(weblinksRef)).pipe(
+      map(snapshot => snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })))
+    );
   }
+
+
+  
+
 }

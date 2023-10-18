@@ -1,14 +1,14 @@
 <div class="user-data-card card" style="width: 18rem">
     <img
         class="user-data-img card-img-top"
-        src="https://robohash.org/{{userData?.id}}?set=set1&size=180x180"        
+        [src]="userPhoto"        
         alt="Imagen usuario"
     />
     <div class="card-body">
         <p class="card-title">{{ userData?.name | titlecase }}</p>
         <p class="card-text">{{ userData?.email | lowercase }}</p>
     </div>
-    <div class="user-data-card-buttons">
+    <!-- <div class="user-data-card-buttons">
         <a
         [routerLink]="['/profile-page/data/edit', userData?.id]"
         class="user-data-card-buttons-edit btn btn-primary"
@@ -48,5 +48,5 @@
         </svg>
         Eliminar</a
         >
-    </div>
+    </div> -->
 </div>

@@ -83,11 +83,11 @@
           <span class="header-container__navbar-items-login-icon" (click)="onClickUser()">
             <img
               class="header-container__navbar-items-login-photo"
-              src="https://robohash.org/{{userPhoto}}?set=set1&size=180x180"        
+              [src]= "userPhoto"       
               alt="Imagen usuario"
             />
           </span>
-          <div class="header-container__navbar-items-login-user-menu" *ngIf="isUserLoggedIn">
+          <div class="header-container__navbar-items-login-user-menu" *ngIf="getUserLogged">
             <ul class="header-container__navbar-items-login-user-menu-list">
               <li class="header-container__navbar-items-login-user-menu-list-item" [routerLink]="['/profile-page/data']"
                 (click)="closeUserMenu()">
