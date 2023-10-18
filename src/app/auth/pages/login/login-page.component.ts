@@ -1,7 +1,6 @@
 import { Component, OnDestroy, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ValidatorsService } from '../../services/validators/validators.service';
-import { UsersService } from '../../services/users.service';
 import { Router } from '@angular/router';
 import { PagesService } from '../../../pages/services/pages.service';
 import { Subject, takeUntil } from 'rxjs';
@@ -13,6 +12,7 @@ import { UserService } from '../../services/user.service';
   styleUrls: ['./login-page.component.css'],
 })
 export class LoginPageComponent implements OnDestroy {
+  
 
   private fb = inject(FormBuilder);
   private validatorsService = inject(ValidatorsService);
@@ -105,13 +105,11 @@ export class LoginPageComponent implements OnDestroy {
 
                 await this.userService.addUser(user);
                 this.userService.setAuthenticatedUserSubject(user)
-                console.log("user añadido",user)
                 this.router.navigate(['/']);
 
               } else {
                 const user = existingUser[0]
                 await this.userService.setAuthenticatedUserSubject(user)
-                console.log("user pasado",user)
                 this.router.navigate(['/']);
               }
             });

@@ -2,7 +2,6 @@ import { Component, inject } from '@angular/core';
 import { Question } from 'src/app/shared/interfaces/answerQuestion.interface';
 import { DataService } from '../../services/data.service';
 import { PagesService } from '../../services/pages.service';
-import { UsersService } from 'src/app/auth/services/users.service';
 import { Subject, combineLatest } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs';
 import { UserService } from 'src/app/auth/services/user.service';
@@ -39,6 +38,7 @@ export class FavoritesComponent {
    
   }
 
+
   checkLoginStatus() {
     this.userService.getAuthenticatedUserSubject()
       .pipe(
@@ -51,6 +51,7 @@ export class FavoritesComponent {
 
       });
   }
+
 
   getFaqs() {
     this.pagesService.selectedCategory$
@@ -76,6 +77,7 @@ export class FavoritesComponent {
       });
   }
 
+
   loadCategory() {
     combineLatest([
       this.pagesService.selectedCategory$,
@@ -89,6 +91,7 @@ export class FavoritesComponent {
       });
   }
 
+
   favoriteStatus(questionId: number) {
     const isFavorited = this.isFavorite(questionId);
     if (isFavorited) {
@@ -100,6 +103,7 @@ export class FavoritesComponent {
     }
   }
 
+
   addToLocalFavorites(questionId: number) {
     const questionToAdd = this.questions.find(
       (question) => question.id === questionId
@@ -110,19 +114,23 @@ export class FavoritesComponent {
     }
   }
 
+
   removeFromLocalFavorites(questionId: number) {
     this.favoriteQuestions = this.favoriteQuestions.filter(
       (question) => question.id !== questionId
     );
   }
 
+
   markAsFavorite(questionId: number) {
     this.dataService.markQuestionAsFavorite(questionId);
   }
 
+
   unmarkAsFavorite(questionId: number) {
     this.dataService.unmarkQuestionAsFavorite(questionId);
   }
+
 
   loadFavoriteQuestions() {
     this.dataService
@@ -131,10 +139,10 @@ export class FavoritesComponent {
         takeUntil(this.unsubscribe$)
       )
       .subscribe((favoriteQuestions: Question[]) => {
-        console.log(favoriteQuestions)
         this.favoriteQuestions = favoriteQuestions;
       });
   }
+
 
   isFavorite(questionId: number): boolean {
     return this.favoriteQuestions.some(
@@ -142,10 +150,12 @@ export class FavoritesComponent {
     );
   }
 
+
   showAnswer(id: number) {
     this.answerVisibility[id] = !this.answerVisibility[id];
     this.borderRadiusState[id] = this.answerVisibility[id];
   }
+
 
   ngOnDestroy() {
     this.unsubscribe$.next();

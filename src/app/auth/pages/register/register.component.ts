@@ -1,10 +1,9 @@
-import { Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { UserData } from 'src/app/shared/interfaces/user-data.interface';
 import { ValidatorsService } from '../../services/validators/validators.service';
-import { UsersService } from '../../services/users.service';
 import { Router } from '@angular/router';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject } from 'rxjs';
 import { UserService } from '../../services/user.service';
 
 @Component({
@@ -12,12 +11,11 @@ import { UserService } from '../../services/user.service';
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css'],
 })
-export class RegisterComponent implements OnInit, OnDestroy {
+export class RegisterComponent {
 
   private fb = inject(FormBuilder);
   private router = inject(Router);
   private validatorsService = inject(ValidatorsService);
-  private usersService = inject(UsersService);
   private userService = inject(UserService);
 
   public user?: UserData;
@@ -39,28 +37,11 @@ export class RegisterComponent implements OnInit, OnDestroy {
     return this.userForm.get('email')?.valid as boolean;
   }
 
+
   get currentUser(): UserData {
     const user: UserData = { ...this.userForm.value, id: this.currentUserId };
     return user;
   }
-
-
-  ngOnInit(): void {
-    // this.loadUser();
-  }
-
-
-  // loadUser() {
-  //   this.usersService.getUpdatedUserSubject()
-  //     .pipe(
-  //       takeUntil(this.unsubscribe$)
-  //     )
-  //     .subscribe((users) => {
-  //       this.user = users;
-  //       this.currentUserId = this.user?.id;
-  //       this.userForm.patchValue(this.user);
-  //     });
-  // }
 
 
   isValidField(field: string): boolean | null {
@@ -88,36 +69,30 @@ export class RegisterComponent implements OnInit, OnDestroy {
     this.userForm.markAllAsTouched();
 
     if (this.userForm.invalid) return;
-
+    
     try {
-        const resp = await this.userService.register(this.currentUser.email, this.currentUser.password);
-        
-        if (resp) {
-            console.log(resp);
-            const photoNumber = Math.floor(Math.random() * 101);
-            const user = {
-                id: resp.user.uid,
-                name: this.currentUser.name,
-                email: resp.user.email,
-                password: null,
-                favoriteQuestions:[],
-                photoUrl: photoNumber
-            };
-            console.log(user);
-            await this.userService.addUser(user);
-            console.log("usuario creado");
-            this.router.navigate(['/login']);
-        }
+      const resp = await this.userService.register(this.currentUser.email, this.currentUser.password);
+
+      if (resp) {
+        console.log(resp);
+        const photoNumber = Math.floor(Math.random() * 101);
+        const user = {
+          id: resp.user.uid,
+          name: this.currentUser.name,
+          email: resp.user.email,
+          password: null,
+          favoriteQuestions: [],
+          photoUrl: photoNumber
+        };
+        await this.userService.addUser(user);
+        console.log("usuario creado")
+        this.router.navigate(['/']);
+      }
     } catch (error) {
-        console.log(error);
+      console.log(error);
     }
 
     this.userForm.reset();
-}
-
-
-  ngOnDestroy(): void {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
   }
+
 }

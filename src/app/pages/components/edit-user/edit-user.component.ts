@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, inject } from '@angular/core';
 import { UserData } from 'src/app/shared/interfaces/user-data.interface';
-import { UsersService } from 'src/app/auth/services/users.service';
+
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -12,7 +12,7 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class EditUserComponent implements OnInit, OnDestroy {
   
-  private usersService = inject(UsersService);
+
   private route = inject(ActivatedRoute);
   private router = inject(Router);
 
@@ -22,40 +22,40 @@ export class EditUserComponent implements OnInit, OnDestroy {
 
 
   ngOnInit(): void {
-    this.getUserIdByUrl();
+    // this.getUserIdByUrl();
   }
 
 
-  getUserIdByUrl(): void {
-    const userId = this.route.snapshot.params['id'];
-    console.log('ID del usuario:', userId);
+  // getUserIdByUrl(): void {
+  //   const userId = this.route.snapshot.params['id'];
+  //   console.log('ID del usuario:', userId);
 
-    this.usersService.getUserById(userId)
-      .pipe(
-        takeUntil(this.unsubscribe$)
-      )
-      .subscribe((userData: UserData) => {
-        this.user = userData;
-      });
-  };
+  //   this.usersService.getUserById(userId)
+  //     .pipe(
+  //       takeUntil(this.unsubscribe$)
+  //     )
+  //     .subscribe((userData: UserData) => {
+  //       this.user = userData;
+  //     });
+  // };
 
 
-  onSaveChanges() {
-    if (this.user) {
-      this.usersService.updateUser(this.user)
-      .pipe(
-        takeUntil(this.unsubscribe$)
-      )
-      .subscribe((updatedUser) => {
-        console.log('Usuario actualizado:', updatedUser);
-        this.user = updatedUser;
-        this.usersService.setAuthenticatedUserSubject(this.user)
-        this.router.navigate(['/profile-page/data']);
-      });
-  } else {
-    console.error('No se puede enviar el formulario porque "user" es nulo o indefinido.');
-  }
-};
+//   onSaveChanges() {
+//     if (this.user) {
+//       this.usersService.updateUser(this.user)
+//       .pipe(
+//         takeUntil(this.unsubscribe$)
+//       )
+//       .subscribe((updatedUser) => {
+//         console.log('Usuario actualizado:', updatedUser);
+//         this.user = updatedUser;
+//         this.usersService.setAuthenticatedUserSubject(this.user)
+//         this.router.navigate(['/profile-page/data']);
+//       });
+//   } else {
+//     console.error('No se puede enviar el formulario porque "user" es nulo o indefinido.');
+//   }
+// };
 
 
   ngOnDestroy(): void {

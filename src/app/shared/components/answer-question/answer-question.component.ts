@@ -3,7 +3,7 @@ import { Question } from '../../interfaces/answerQuestion.interface';
 import { PagesService } from 'src/app/pages/services/pages.service';
 import { Subject, combineLatest, of, switchMap, takeUntil } from 'rxjs';
 import { DataService } from 'src/app/pages/services/data.service';
-import { UsersService } from 'src/app/auth/services/users.service';
+
 import { Router } from '@angular/router';
 import { UserService } from 'src/app/auth/services/user.service';
 
@@ -16,7 +16,7 @@ import { UserService } from 'src/app/auth/services/user.service';
 export class AnswerQuestionComponent {
   private pagesService = inject(PagesService);
   private dataService = inject(DataService);
-  private userService = inject(UsersService);
+
   private userServices = inject(UserService);
   private router = inject(Router);
 
@@ -38,19 +38,23 @@ export class AnswerQuestionComponent {
     this.checkLoginStatus()
   }
 
-  playQuiz(){
+  playQuiz() {
     this.router.navigate(['/quiz']);
   }
 
-  checkLoginStatus(){
-    this.userServices.getAuthenticatedUserSubject().subscribe((loggedIn) => {
-      if(loggedIn){
-        this.isLoggedIn =true;
-      }else {
-        this.isLoggedIn = false;
-      }
-      
-    })
+  checkLoginStatus() {
+    this.userServices.getAuthenticatedUserSubject()
+      .pipe(
+        takeUntil(this.unsubscribe$)
+      )
+      .subscribe((loggedIn) => {
+        if (loggedIn) {
+          this.isLoggedIn = true;
+        } else {
+          this.isLoggedIn = false;
+        }
+
+      })
   }
 
   getFaqs() {
@@ -132,6 +136,9 @@ export class AnswerQuestionComponent {
   loadFavoriteQuestions() {
     this.dataService
       .getFavoriteQuestions()
+      .pipe(
+        takeUntil(this.unsubscribe$)
+      )
       .subscribe((favoriteQuestions: Question[]) => {
         this.favoriteQuestions = favoriteQuestions;
       });

@@ -19,7 +19,7 @@ export class UserService implements OnDestroy {
 
   constructor(private auth: Auth,
     private firestore: Firestore) {
-     this.getUserLogged()
+      this.getUserLogged()
   }
   
 
