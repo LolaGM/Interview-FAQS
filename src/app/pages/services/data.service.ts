@@ -76,7 +76,6 @@ export class DataService implements OnDestroy {
 
         try {
           await updateDoc(userRef, userData);
-          console.log("Document successfully updated!");
           return true;
         } catch (error) {
           console.error("Error updating document: ", error);
@@ -114,7 +113,6 @@ export class DataService implements OnDestroy {
 
         try {
           await updateDoc(userRef, userData);
-          console.log("Document successfully updated!");
           return true;
         } catch (error) {
           console.error("Error updating document: ", error);

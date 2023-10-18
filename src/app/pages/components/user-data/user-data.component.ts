@@ -25,8 +25,8 @@ export class UserDataComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.getUserLogged();
-   
-    
+
+
   };
 
 
@@ -37,14 +37,13 @@ export class UserDataComponent implements OnInit, OnDestroy {
       )
       .subscribe((user) => {
         if (user) {
-          console.log(user)
           if (Array.isArray(user)) {
             this.userData = user[0]
           } else {
             this.userData = user
           }
           this.getPhoto()
-        } 
+        }
       });
   };
 
@@ -56,50 +55,6 @@ export class UserDataComponent implements OnInit, OnDestroy {
     .subscribe(resp => this.userPhoto = resp)
   }
 
-
-
-  
-
-
-  // getUpdatedUser(): void {
-  //   this.usersService.getUpdatedUserSubject()
-  //     .pipe(
-  //       takeUntil(this.unsubscribe$)
-  //     )
-  //     .subscribe((updatedUser) => {
-  //       console.log('Usuario actualizado:', updatedUser);
-
-  //       if (updatedUser) {
-  //         this.userData = updatedUser;
-  //       }
-  //     });
-  // };
-
-
-  // onConfirmDelete() {
-  //   if (this.userData) {
-  //     const confirmation = confirm(`¿Estás seguro de que deseas eliminar tu perfil ${this.userData.name}? Esta acción no se puede deshacer.`);
-
-  //     if (confirmation) {
-  //       localStorage.removeItem('authToken');
-  //       // this.onDeleteUser(this.userData);
-  //     }
-  //     else {
-  //       this.router.navigate(['/profile-page/data']);
-  //     }
-  //   }
-  // };
-
-
-  // onDeleteUser(userData: UserData) {
-  //   this.usersService.deleteUserById(userData.id)
-  //     .pipe(
-  //       takeUntil(this.unsubscribe$)
-  //     )
-  //     .subscribe((_) => {
-  //       this.router.navigate(['/login']);
-  //     });
-  // };
 
 
   ngOnDestroy(): void {

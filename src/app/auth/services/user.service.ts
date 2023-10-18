@@ -21,7 +21,7 @@ export class UserService implements OnDestroy {
     private firestore: Firestore) {
       this.getUserLogged()
   }
-  
+
 
 
   setAuthenticatedUserSubject(user: UserData | null): void {
@@ -81,7 +81,6 @@ export class UserService implements OnDestroy {
         const userData = user[0]
         this.setAuthenticatedUserSubject(userData)
       })
-      console.log("este es mi user desde servicio",user)
     });
   }
 
@@ -105,26 +104,10 @@ export class UserService implements OnDestroy {
 
 
 
-   deleteUser() {
-    const user = this.auth.currentUser;
-  
-    if (user) {
-      try {
-        user.delete();
-        console.log("Usuario eliminado exitosamente");
-      } catch (error) {
-        console.error("Error al eliminar el usuario: ", error);
-      }
-    } else {
-      console.log("No hay ningún usuario autenticado");
-    }
-  }
-
-
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
   }
 
-  
+
 }
