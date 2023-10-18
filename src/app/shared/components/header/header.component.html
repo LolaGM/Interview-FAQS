@@ -83,7 +83,7 @@
           <span class="header-container__navbar-items-login-icon" (click)="onClickUser()">
             <img
               class="header-container__navbar-items-login-photo"
-              src="https://robohash.org/{{userPhoto}}?set=set1&size=180x180"        
+              [src]= "userPhoto"       
               alt="Imagen usuario"
             />
           </span>

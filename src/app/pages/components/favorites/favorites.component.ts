@@ -3,7 +3,7 @@ import { Question } from 'src/app/shared/interfaces/answerQuestion.interface';
 import { DataService } from '../../services/data.service';
 import { PagesService } from '../../services/pages.service';
 import { UsersService } from 'src/app/auth/services/users.service';
-import { Subject, combineLatest} from 'rxjs';
+import { Subject, combineLatest } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs';
 import { UserService } from 'src/app/auth/services/user.service';
 
@@ -13,7 +13,7 @@ import { UserService } from 'src/app/auth/services/user.service';
   styleUrls: ['./favorites.component.css'],
 })
 export class FavoritesComponent {
-  
+
   private dataService = inject(DataService);
   private pagesService = inject(PagesService);
   private userService = inject(UserService);
@@ -36,16 +36,20 @@ export class FavoritesComponent {
     this.loadCategory();
     this.loadFavoriteQuestions();
     this.checkLoginStatus();
-    this.userService.getIdDocument().subscribe(val => console.log(val))
+   
   }
 
   checkLoginStatus() {
-    this.userService.getAuthenticatedUserSubject().subscribe((loggedIn) => {
-      if(loggedIn){
-        this.isLoggedIn = true;
-      }
-     
-    });
+    this.userService.getAuthenticatedUserSubject()
+      .pipe(
+        takeUntil(this.unsubscribe$)
+      )
+      .subscribe((loggedIn) => {
+        if (loggedIn) {
+          this.isLoggedIn = true;
+        }
+
+      });
   }
 
   getFaqs() {
@@ -123,6 +127,9 @@ export class FavoritesComponent {
   loadFavoriteQuestions() {
     this.dataService
       .getFavoriteQuestions()
+      .pipe(
+        takeUntil(this.unsubscribe$)
+      )
       .subscribe((favoriteQuestions: Question[]) => {
         console.log(favoriteQuestions)
         this.favoriteQuestions = favoriteQuestions;

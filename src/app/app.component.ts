@@ -5,6 +5,7 @@ import { takeUntil } from 'rxjs/operators';
 import { UsersService } from './auth/services/users.service';
 import { UserService } from './auth/services/user.service';
 import { UserData } from './shared/interfaces/user-data.interface';
+import { Auth } from '@angular/fire/auth';
 
 @Component({
   selector: 'app-root',
@@ -19,10 +20,12 @@ export class AppComponent implements OnInit, OnDestroy {
   private userService = inject(UsersService);
   private unsubscribe$ = new Subject<void>();
   private userServices = inject(UserService);
-  private user?: null |string = null
+  private user?: null | string = null
+  private userData!: UserData |null;
+  private auth = inject(Auth)
 
   ngOnInit(): void {
-     this.getUserLogged()
+    this.getUserLogged()
   };
 
 
@@ -32,22 +35,25 @@ export class AppComponent implements OnInit, OnDestroy {
   };
 
 
-  getUserLogged() {
-    const authDataString = localStorage.getItem('authToken');
-    if(authDataString){
-      this.userServices.getUserById(authDataString).subscribe(user=>{
-        console.log(user)
-        const userData = user[0]
-        console.log(userData)
-        this.userServices.setAuthenticatedUserSubject(userData)
-      })
-    }
-  }
-
 
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
   };
+
+
+  getUserLogged() {
+    this.auth.onAuthStateChanged(user => {
+      this.userServices.getUserById(user?.uid)
+      .pipe(
+        takeUntil(this.unsubscribe$)
+      )
+      .subscribe(user => {
+        const userData = user[0]
+        this.userServices.setAuthenticatedUserSubject(userData)
+      })
+      console.log("este es mi user desde servicio",user)
+    });
+  }
 
 }

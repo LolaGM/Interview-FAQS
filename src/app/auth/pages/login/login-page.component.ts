@@ -13,9 +13,9 @@ import { UserService } from '../../services/user.service';
   styleUrls: ['./login-page.component.css'],
 })
 export class LoginPageComponent implements OnDestroy {
+
   private fb = inject(FormBuilder);
   private validatorsService = inject(ValidatorsService);
-  private usersService = inject(UsersService);
   private router = inject(Router);
   private pagesService = inject(PagesService);
   private userService = inject(UserService);
@@ -33,7 +33,6 @@ export class LoginPageComponent implements OnDestroy {
       ],
     ],
   });
-
 
 
   get isEmailValid(): boolean {
@@ -55,17 +54,21 @@ export class LoginPageComponent implements OnDestroy {
     try {
       const response = await this.userService.login(this.myForm.value.email, this.myForm.value.password);
       if (response) {
-       
-        this.userService.getUserById(response.user.uid).subscribe(user => {
-          const userData = user[0]
-          this.userService.setAuthenticatedUserSubject(userData)
-          this.router.navigate(['/']);
-        const authData = {
-          id:response.user.uid
-        }
-        localStorage.setItem('authToken',JSON.stringify(authData))
-        })
-             
+
+        this.userService.getUserById(response.user.uid)
+          .pipe(
+            takeUntil(this.unsubscribe$)
+          )
+          .subscribe(user => {
+            const userData = user[0]
+            this.userService.setAuthenticatedUserSubject(userData)
+            this.router.navigate(['/']);
+            const authData = {
+              id: response.user.uid
+            }
+            localStorage.setItem('authToken', JSON.stringify(authData))
+          })
+
       } else {
         this.isUserRegistered = false;
       }
@@ -77,10 +80,42 @@ export class LoginPageComponent implements OnDestroy {
 
   onClick() {
     this.userService.loginWithGoogle()
-      .then(response => {
+      .then(async response => {
         console.log(response);
-        // this.userService.isUserLogged()
-        this.router.navigate(['/']);
+        if (response) {
+
+          this.userService.getUserById(response.user.uid)
+            .pipe(
+              takeUntil(this.unsubscribe$)
+            )
+            .subscribe(async existingUser => {
+
+              if (existingUser.length === 0) {
+                const arrayName: any = response.user.displayName?.split(" ")
+                const name = arrayName[0]
+                const photoUrl = response.user.photoURL
+                const user = {
+                  id: response.user.uid,
+                  name: name,
+                  email: response.user.email,
+                  password: null,
+                  favoriteQuestions: [],
+                  photoUrl: photoUrl ? photoUrl : 'default_url'
+                };
+
+                await this.userService.addUser(user);
+                this.userService.setAuthenticatedUserSubject(user)
+                console.log("user añadido",user)
+                this.router.navigate(['/']);
+
+              } else {
+                const user = existingUser[0]
+                await this.userService.setAuthenticatedUserSubject(user)
+                console.log("user pasado",user)
+                this.router.navigate(['/']);
+              }
+            });
+        };
       })
       .catch(error => console.log(error))
   }

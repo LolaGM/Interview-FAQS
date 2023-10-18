@@ -1,31 +1,45 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, signInWithPopup, GoogleAuthProvider, User } from '@angular/fire/auth';
 import { Firestore, collection, addDoc, getDocs, doc, getDoc, collectionData, } from '@angular/fire/firestore';
 
-import { Observable, BehaviorSubject, from, map } from 'rxjs';
+import { Observable, BehaviorSubject, from, map, takeUntil, Subject } from 'rxjs';
 import { UserData } from 'src/app/shared/interfaces/user-data.interface';
 
 
 @Injectable({
   providedIn: 'root'
 })
-export class UserService {
+export class UserService implements OnDestroy {
+
   private userSubject: BehaviorSubject<User | null> = new BehaviorSubject<User | null>(null);
   public user$: Observable<User | null> = this.userSubject.asObservable();
   private authenticatedUserSubject$ = new BehaviorSubject<UserData | null>(null);
+  private authenticatedUserProfileSubject$ = new BehaviorSubject<UserData | null>(null);
+  private unsubscribe$ = new Subject<void>();
 
   constructor(private auth: Auth,
     private firestore: Firestore) {
-    this.getUserLogged()
+     this.getUserLogged()
   }
+  
 
 
   setAuthenticatedUserSubject(user: UserData | null): void {
-    this.authenticatedUserSubject$.next(user)
+    this.authenticatedUserProfileSubject$.next(user)
   };
 
 
   getAuthenticatedUserSubject(): Observable<UserData | null> {
+    return this.authenticatedUserProfileSubject$.asObservable();
+  }
+
+
+  setAuthenticatedUserProfileSubject(photo:any): void {
+    this.authenticatedUserSubject$.next(photo)
+  };
+
+
+  getAuthenticatedUserProfileSubject(): Observable<UserData | null> {
     return this.authenticatedUserSubject$.asObservable();
   }
 
@@ -55,17 +69,15 @@ export class UserService {
     return addDoc(usersRef, user);
   }
 
-  getIdDocument() {
-    const collectionInstance = collection(this.firestore, 'users');
-    collectionData(collectionInstance, {idField:'id'})
-    
-    return collectionData(collectionInstance, {idField:'id'})
-  }
 
 
   getUserLogged() {
     this.auth.onAuthStateChanged(user => {
-      this.getUserById(user?.uid).subscribe(user => {
+      this.getUserById(user?.uid)
+      .pipe(
+        takeUntil(this.unsubscribe$)
+      )
+      .subscribe(user => {
         const userData = user[0]
         this.setAuthenticatedUserSubject(userData)
       })
@@ -91,6 +103,28 @@ export class UserService {
   );
   }
 
+
+
+   deleteUser() {
+    const user = this.auth.currentUser;
+  
+    if (user) {
+      try {
+        user.delete();
+        console.log("Usuario eliminado exitosamente");
+      } catch (error) {
+        console.error("Error al eliminar el usuario: ", error);
+      }
+    } else {
+      console.log("No hay ningún usuario autenticado");
+    }
+  }
+
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
 
   
 }

@@ -24,7 +24,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   public isUserLoggedIn: boolean = false;
   public isUserAuthenticated: boolean = false;
   public userData!: string;
-  public userPhoto!: number;
+  public userPhoto? = "https://robohash.org/set=set1&size=180x180"
 
   private unsubscribe$ = new Subject<void>();
 
@@ -68,13 +68,26 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
 
   getUserLogged() {
-    this.userService.getAuthenticatedUserSubject().subscribe(resp => {
+    console.log("entra al getUserlogged")
+    this.userService.getAuthenticatedUserSubject()
+    .pipe(
+      takeUntil(this.unsubscribe$)
+    )
+    .subscribe(resp => {
       if (resp) {
-       console.log(resp)
-          this.userData = resp.name
-          this.userPhoto = resp.id
-          this.isUserAuthenticated = true;
+        console.log(resp)
+        this.userData = resp.name
         
+        if (typeof resp.photoUrl === 'string' && resp.photoUrl.includes('https')) {
+          this.userPhoto = resp.photoUrl;
+       
+        } else if (typeof resp.photoUrl === 'number') {
+          this.userPhoto = `https://robohash.org/${resp.photoUrl}?set=set1&size=180x180`;
+          
+        }
+        
+        this.userService.setAuthenticatedUserProfileSubject(this.userPhoto)
+        this.isUserAuthenticated = true;
       } else {
         this.userData = "";
         this.isUserAuthenticated = false;
@@ -87,6 +100,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.userService.logout();
     localStorage.clear();
     this.router.navigate(['/login']);
+    this.userPhoto = "https://robohash.org/set=set1&size=180x180"
     this.isUserAuthenticated = false;
   }
 

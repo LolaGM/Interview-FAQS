@@ -46,21 +46,21 @@ export class RegisterComponent implements OnInit, OnDestroy {
 
 
   ngOnInit(): void {
-    this.loadUser();
+    // this.loadUser();
   }
 
 
-  loadUser() {
-    this.usersService.getUpdatedUserSubject()
-      .pipe(
-        takeUntil(this.unsubscribe$)
-      )
-      .subscribe((users) => {
-        this.user = users;
-        this.currentUserId = this.user?.id;
-        this.userForm.patchValue(this.user);
-      });
-  }
+  // loadUser() {
+  //   this.usersService.getUpdatedUserSubject()
+  //     .pipe(
+  //       takeUntil(this.unsubscribe$)
+  //     )
+  //     .subscribe((users) => {
+  //       this.user = users;
+  //       this.currentUserId = this.user?.id;
+  //       this.userForm.patchValue(this.user);
+  //     });
+  // }
 
 
   isValidField(field: string): boolean | null {
@@ -94,17 +94,19 @@ export class RegisterComponent implements OnInit, OnDestroy {
         
         if (resp) {
             console.log(resp);
+            const photoNumber = Math.floor(Math.random() * 101);
             const user = {
                 id: resp.user.uid,
                 name: this.currentUser.name,
                 email: resp.user.email,
                 password: null,
-                favoriteQuestions:[]
+                favoriteQuestions:[],
+                photoUrl: photoNumber
             };
             console.log(user);
             await this.userService.addUser(user);
             console.log("usuario creado");
-            this.router.navigate(['/']);
+            this.router.navigate(['/login']);
         }
     } catch (error) {
         console.log(error);

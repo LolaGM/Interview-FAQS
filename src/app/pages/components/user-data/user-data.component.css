@@ -20,8 +20,9 @@
     background-color: #778899!important;
     display: flex;
     align-items: center !important;
-    justify-content: center; 
-    border-radius: 8px;
+    justify-content: center;
+    border-top-right-radius: 8px;
+    border-top-left-radius: 8px;
 
     @media (min-width: 768px) {
         width: 350px;
