@@ -1,5 +1,5 @@
 .user-data-card{
-    width: 250px !important;
+    width: 270px !important;
     background-color: #0f213B;
     color:#fcfcfc;
     display: flex;
@@ -16,7 +16,7 @@
 }
 
 .user-data-img{
-    width: 250px;
+    width: 270px;
     background-color: #778899!important;
     display: flex;
     align-items: center !important;
@@ -40,8 +40,8 @@
     margin-bottom: 15px;
 }
 
-.user-data-card-buttons-edit-icon 
-.user-data-card-buttons-delete-icon 
+.user-data-card-buttons-edit-icon
+.user-data-card-buttons-delete-icon
 {
     margin-right: 5px;
 }
