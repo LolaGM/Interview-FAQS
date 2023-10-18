@@ -87,7 +87,7 @@
               alt="Imagen usuario"
             />
           </span>
-          <div class="header-container__navbar-items-login-user-menu" *ngIf="getUserLogged">
+          <div class="header-container__navbar-items-login-user-menu" *ngIf="isUserLoggedIn">
             <ul class="header-container__navbar-items-login-user-menu-list">
               <li class="header-container__navbar-items-login-user-menu-list-item" [routerLink]="['/profile-page/data']"
                 (click)="closeUserMenu()">

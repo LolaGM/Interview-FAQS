@@ -2,7 +2,6 @@ import { Component, ElementRef, OnDestroy, OnInit, Renderer2, inject } from '@an
 import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { PagesService } from 'src/app/pages/services/pages.service';
-import { UsersService } from '../../../auth/services/users.service';
 import { UserService } from 'src/app/auth/services/user.service';
 
 @Component({
@@ -75,15 +74,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
     )
     .subscribe(resp => {
       if (resp) {
-        console.log(resp)
         this.userData = resp.name
         
         if (typeof resp.photoUrl === 'string' && resp.photoUrl.includes('https')) {
           this.userPhoto = resp.photoUrl;
        
         } else if (typeof resp.photoUrl === 'number') {
-          this.userPhoto = `https://robohash.org/${resp.photoUrl}?set=set1&size=180x180`;
-          
+          this.userPhoto = `https://robohash.org/${resp.photoUrl}?set=set1&size=180x180`; 
         }
         
         this.userService.setAuthenticatedUserProfileSubject(this.userPhoto)

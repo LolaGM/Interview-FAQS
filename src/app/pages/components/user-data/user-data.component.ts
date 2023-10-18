@@ -1,7 +1,6 @@
 import { Router } from '@angular/router';
 import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 
-import { UsersService } from 'src/app/auth/services/users.service';
 import { UserData } from 'src/app/shared/interfaces/user-data.interface';
 
 import { Subject } from 'rxjs';
@@ -15,9 +14,8 @@ import { UserService } from 'src/app/auth/services/user.service';
 })
 export class UserDataComponent implements OnInit, OnDestroy {
 
-  private usersService = inject(UsersService);
   private userService = inject(UserService);
-  private router = inject(Router);
+
   public userPhoto?:any;
 
   public userData: UserData | null = null;
@@ -27,8 +25,8 @@ export class UserDataComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.getUserLogged();
-    // this.getUpdatedUser();
-    this.loadUserData();
+   
+    
   };
 
 
@@ -60,23 +58,7 @@ export class UserDataComponent implements OnInit, OnDestroy {
 
 
 
-  loadUserData() {
-    this.usersService.getAuthenticatedUserSubject()
-      .pipe(
-        takeUntil(this.unsubscribe$)
-      )
-      .subscribe((user) => {
-        if (user) {
-        this.userData = user
-        if (typeof user.photoUrl === 'string' && user.photoUrl.includes('https')) {
-          this.userPhoto = user.photoUrl;
-        } else if (typeof user.photoUrl === 'number') {
-          this.userPhoto = `https://robohash.org/${user.photoUrl}?set=set1&size=180x180`;
-        }
-        
-      } 
-      });
-  };
+  
 
 
   // getUpdatedUser(): void {
