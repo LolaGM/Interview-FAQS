@@ -15,7 +15,7 @@ import { QuizComponent } from './pages/quiz/quiz.component';
 
 const routes: Routes = [
   {
-    path: 'home-page',
+    path: '',
     component: HomePageComponent
   },
   {
@@ -52,7 +52,7 @@ const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: 'home-page'
+    redirectTo: ''
   }
 ];
 
