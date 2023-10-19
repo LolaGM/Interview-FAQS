@@ -96,10 +96,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
   logout() {
     this.userService.logout();
     localStorage.clear();
-    this.router.navigate(['/login']);
-    this.userPhoto = "https://robohash.org/set=set1&size=180x180"
+    this.userPhoto = "https://robohash.org/set=set1&size=180x180";
     this.isUserAuthenticated = false;
-  }
+    this.router.navigate(['/']).then(() => {
+        location.reload();
+    });
+}
 
 
   ngOnDestroy(): void {
